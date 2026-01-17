@@ -1,0 +1,15 @@
+# PostgreSQL compose file
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: kittyk
+      POSTGRES_PASSWORD: kittyk
+      POSTGRES_DB: kittyk
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+volumes:
+  pgdata:
