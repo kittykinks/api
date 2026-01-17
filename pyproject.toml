@@ -1,0 +1,19 @@
+[project]
+name = "kittyk"
+version = "0.1.0"
+description = "Your kinky link in bio."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aerich[toml]>=0.9.2",
+    "fastapi[standard]>=0.128.0",
+    "httpx>=0.28.1",
+    "nanoid>=2.0.0",
+    "python-dotenv>=1.2.1",
+    "tortoise-orm[accel]>=0.25.3",
+]
+
+[tool.aerich]
+tortoise_orm = "kittyk.db.CONFIG"
+location = "kittyk/db/migrations"
+src_folder = "./."

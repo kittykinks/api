@@ -1,0 +1,101 @@
+from tortoise import BaseDBAsyncClient
+
+RUN_IN_TRANSACTION = True
+
+
+async def upgrade(db: BaseDBAsyncClient) -> str:
+    return """
+        CREATE TABLE IF NOT EXISTS "user" (
+    "id" VARCHAR(21) NOT NULL PRIMARY KEY,
+    "discord_id" VARCHAR(32) UNIQUE,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS "session" (
+    "id" VARCHAR(21) NOT NULL PRIMARY KEY,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expires_at" TIMESTAMP NOT NULL,
+    "user_id" VARCHAR(21) NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "site" (
+    "id" VARCHAR(21) NOT NULL PRIMARY KEY,
+    "slug" VARCHAR(32) NOT NULL UNIQUE,
+    "name" VARCHAR(64) NOT NULL,
+    "bio" VARCHAR(128),
+    "avatar_url" VARCHAR(256),
+    "banner_url" VARCHAR(256),
+    "user_id" VARCHAR(21) NOT NULL UNIQUE REFERENCES "user" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "link" (
+    "id" VARCHAR(21) NOT NULL PRIMARY KEY,
+    "source" VARCHAR(9) NOT NULL /* DISCORD: discord\nTWITTER: twitter\nINSTAGRAM: instagram\nWATTPAD: wattpad\nSESSION: session\nREDDIT: reddit\nTELEGRAM: telegram\nTUMBLR: tumblr\nBLUESKY: bluesky\nMASTODON: mastodon\nSIGNAL: signal\nMATRIX: matrix\nOTHER: other */,
+    "pointer" VARCHAR(128) NOT NULL,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "site_id" VARCHAR(21) NOT NULL REFERENCES "site" ("id") ON DELETE CASCADE,
+    "user_id" VARCHAR(21) NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "kink" (
+    "id" VARCHAR(21) NOT NULL PRIMARY KEY,
+    "name" VARCHAR(64) NOT NULL,
+    "description" TEXT NOT NULL,
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS "kinkrating" (
+    "id" VARCHAR(21) NOT NULL PRIMARY KEY,
+    "rating" INT NOT NULL,
+    "comment" VARCHAR(32),
+    "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "kink_id" VARCHAR(21) NOT NULL REFERENCES "kink" ("id") ON DELETE CASCADE,
+    "site_id" VARCHAR(21) NOT NULL REFERENCES "site" ("id") ON DELETE CASCADE,
+    "user_id" VARCHAR(21) NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "aerich" (
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    "version" VARCHAR(255) NOT NULL,
+    "app" VARCHAR(100) NOT NULL,
+    "content" JSON NOT NULL
+);"""
+
+
+async def downgrade(db: BaseDBAsyncClient) -> str:
+    return """
+        """
+
+
+MODELS_STATE = (
+    "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"
+    "nd8v"
+)
