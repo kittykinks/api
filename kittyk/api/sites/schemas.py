@@ -17,7 +17,7 @@ class SiteSchema(BaseModel):
     avatar_url: HttpUrl | None = Field(max_length=256)
     banner_url: HttpUrl | None = Field(max_length=256)
 
-    kinks: list[KinkSchema] = Field(max_length=25)
+    kinks: list[KinkSchema] = Field(max_length=50)
     links: list["LinkSchema"] = Field(max_length=25)
 
     created_at: datetime
