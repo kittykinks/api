@@ -15,3 +15,6 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite://:memory:")
 
 
 LOGIN_NEXT_URL = os.getenv("LOGIN_NEXT_URL", "/")
+
+
+CATBOX_USERHASH = os.getenv("CATBOX_USERHASH", "")

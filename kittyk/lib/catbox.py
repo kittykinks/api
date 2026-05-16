@@ -1,5 +1,7 @@
 from httpx import AsyncClient
 
+from kittyk.lib import settings
+
 
 http = AsyncClient()
 
@@ -33,7 +35,7 @@ async def upload(*, file: bytes = ..., url: str = ...) -> str:
             "https://catbox.moe/user/api.php",
             data={
                 "reqtype": "fileupload",
-                "userhash": "",
+                "userhash": settings.CATBOX_USERHASH,
             },
             files={"fileToUpload": file},
         )
